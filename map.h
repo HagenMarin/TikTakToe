@@ -53,6 +53,8 @@ public:
         return *this;
     }
 
+    int getCurrentPlayer()
+
     int checkValidity(int index1, int index2){
         if(mapArr[index1*size+index2]){
             return 0;
@@ -125,7 +127,7 @@ public:
         return 0;
     }
 
-    sizeAndArrPointer returnValidPos() {
+    sizeAndArrPointer getValidPos() {
         int sizeOfArr = 0;
         for (int i = 0;i<size;i++){
             for(int n = 0;n<size;n++){
@@ -194,9 +196,10 @@ public:
             throw std::invalid_argument("Invalid Move");
         }
         this->mapArr[index1*size+index2]=val;
-        if(checkWin(index1,index2,val)){
-            cout << "Winner: " << val << endl;
-        }
+        /*if(checkWin(index1,index2,val)){
+            printMap();
+            clear();
+        }*/
         currentPlayer *= -1;
         return *this;
     }
