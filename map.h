@@ -62,21 +62,55 @@ public:
     }
 
     int checkWin(int index1,int index2,int val){
-        for (int i = 1;i<5;i++){
+        int count = 0;
+        for (int i = -4;i<5;i++){
             if(mapArr[index1*size+index2+i]!=val){
-                goto left;
+                count=0;
+            }else{
+                count++;
+                if(count==5){
+                    return 1;
+                }
             }
 
         }
-        return 1;
-        left:
-        for (int i = 1;i<5;i++){
-            if(mapArr[index1*size+index2+i]!=val){
-                goto left;
+        count = 0;
+        for (int i = -4;i<5;i++){
+            if(mapArr[(index1+i)*size+index2]!=val){
+                count=0;
+            }else{
+                count++;
+                if(count==5){
+                    return 1;
+                }
             }
 
         }
+        count = 0;
+        for (int i = -4;i<5;i++){
+            if(mapArr[(index1+i)*size+index2+i]!=val){
+                count=0;
+            }else{
+                count++;
+                if(count==5){
+                    return 1;
+                }
+            }
 
+        }
+        count = 0;
+        for (int i = -4;i<5;i++){
+            if(mapArr[(index1+i)*size+index2-i]!=val){
+                count=0;
+            }else{
+                count++;
+                if(count==5){
+                    return 1;
+                }
+            }
+
+        }
+        return 0;
     }
     
     void printMap()
@@ -106,9 +140,12 @@ public:
             throw std::out_of_range("Index out of range");
         }
         if(!checkValidity(index1,index2)){
-            throw std::invalid_argument("This index is already set");
+            throw std::invalid_argument("Invalid Move");
         }
         this->mapArr[index1*size+index2]=val;
+        if(checkWin(index1,index2,val)){
+            cout << "Winner: " << val << endl;
+        }
         currentPlayer *= -1;
         return *this;
     }
@@ -116,6 +153,7 @@ public:
         for(int i = 0;i<size*size;i++){
             mapArr[i] = 0;
         }
+        mapArr[(int)(size/2)*size+(int)(size/2)]=currentPlayer*-1;
         return *this;
     }
 };
