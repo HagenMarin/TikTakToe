@@ -1,0 +1,123 @@
+#ifndef __LIST_SET_H__
+#define __LIST_SET_H__
+
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+class map
+{
+private:
+
+    int *mapArr;
+    int size = 0;
+    int currentPlayer;
+    char symbols[2] = {'O','X'};
+
+    int* deep_copy_list(int* a, int length){
+        int* temp = new int[length];
+        for (int i = 0;i<length;i++){
+            temp[i] = a[i];
+        }
+        return temp;
+    }
+
+public:
+    
+    map(int mapSize=10,int startingPlayer = -1){
+        currentPlayer = startingPlayer;
+        size = mapSize;
+        mapArr = new int[size*size];
+        clear();
+        
+    }
+    map(const map &m) { 
+        this->size = m.size;
+        this->currentPlayer = m.currentPlayer;
+        this->mapArr = deep_copy_list(m.mapArr,m.size*m.size);
+    }
+    // destructor
+    ~map()
+    {
+        delete mapArr;
+    }
+
+    map operator=(const map &m){
+        this->mapArr = deep_copy_list(m.mapArr,m.size*m.size);
+        return *this;
+    }
+
+    int checkValidity(int index1, int index2){
+        if(mapArr[index1*size+index2]){
+            return 0;
+        }
+        for(int i = -1;i<2;i++){
+            for(int n = -1;n<2;n++){
+                if(mapArr[(index1+i)*size+index2+n]){
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+
+    int checkWin(int index1,int index2,int val){
+        for (int i = 1;i<5;i++){
+            if(mapArr[index1*size+index2+i]!=val){
+                goto left;
+            }
+
+        }
+        return 1;
+        left:
+        for (int i = 1;i<5;i++){
+            if(mapArr[index1*size+index2+i]!=val){
+                goto left;
+            }
+
+        }
+
+    }
+    
+    void printMap()
+    {
+
+        for (int i = 0; i < size; i++)
+        {
+            for (int n = 0; n < size; n++)
+            {
+                if(!mapArr[i * size + n]){
+                    cout << "  ";
+                }else{
+                    cout << symbols[max(0,mapArr[i * size + n])] << " ";
+                }
+                
+            }
+            cout << endl;
+        }
+    }
+    
+
+    map set(int index1, int index2, int val){
+        if(val!=currentPlayer){
+            cout << "Warning: Current Player is not equal to set Player" << endl;
+        }
+        if(index1>size || index2>size){
+            throw std::out_of_range("Index out of range");
+        }
+        if(!checkValidity(index1,index2)){
+            throw std::invalid_argument("This index is already set");
+        }
+        this->mapArr[index1*size+index2]=val;
+        currentPlayer *= -1;
+        return *this;
+    }
+    map clear(){
+        for(int i = 0;i<size*size;i++){
+            mapArr[i] = 0;
+        }
+        return *this;
+    }
+};
+
+#endif
