@@ -53,7 +53,9 @@ public:
         return *this;
     }
 
-    int getCurrentPlayer()
+    int getCurrentPlayer(){
+        return currentPlayer;
+    }
 
     int checkValidity(int index1, int index2){
         if(mapArr[index1*size+index2]){
@@ -98,7 +100,6 @@ public:
                     return 1;
                 }
             }
-
         }
         count = 0;
         for (int i = -4;i<5;i++){
