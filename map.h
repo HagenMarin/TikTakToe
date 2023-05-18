@@ -5,6 +5,12 @@
 #include <iostream>
 
 using namespace std;
+
+struct sizeAndArrPointer{
+    int size;
+    int *arr;
+};
+
 class map
 {
 private:
@@ -111,6 +117,45 @@ public:
 
         }
         return 0;
+    }
+
+    sizeAndArrPointer returnValidPos() {
+        int sizeOfArr = 0;
+        for (int i = 0;i<size;i++){
+            for(int n = 0;n<size;n++){
+                if(mapArr[i*size+n]){
+                    for(int x = -1;i<2;i++){
+                        for(int y = -1;n<2;n++){
+                            if(!mapArr[(i+x)*size+n+y]){
+                                sizeOfArr++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int* temp = new int[sizeOfArr*2];
+        int counter = 0;
+        for (int i = 0;i<size;i++){
+            for(int n = 0;n<size;n++){
+                if(mapArr[i*size+n]){
+                    for(int x = -1;i<2;i++){
+                        for(int y = -1;n<2;n++){
+                            if(!mapArr[(i+x)*size+n+y]){
+                                temp[counter] = i+x;
+                                counter++;
+                                temp[counter] = n+y;
+                                counter++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        sizeAndArrPointer a;
+        a.arr = temp;
+        a.size = sizeOfArr;
+        return a;
     }
     
     void printMap()
