@@ -58,7 +58,13 @@ public:
             return 0;
         }
         for(int i = -1;i<2;i++){
+            if(index1+i<0||index1+i>size-1){
+                continue;
+            }
             for(int n = -1;n<2;n++){
+                if(index2+n<0||index2+n>size-1){
+                    continue;
+                }
                 if(mapArr[(index1+i)*size+index2+n]){
                     return 1;
                 }
@@ -123,14 +129,11 @@ public:
         int sizeOfArr = 0;
         for (int i = 0;i<size;i++){
             for(int n = 0;n<size;n++){
-                if(mapArr[i*size+n]){
-                    for(int x = -1;i<2;i++){
-                        for(int y = -1;n<2;n++){
-                            if(!mapArr[(i+x)*size+n+y]){
-                                sizeOfArr++;
-                            }
-                        }
-                    }
+                if(checkValidity(i,n)){
+                    sizeOfArr++;
+                            
+                        
+                    
                 }
             }
         }
@@ -138,17 +141,11 @@ public:
         int counter = 0;
         for (int i = 0;i<size;i++){
             for(int n = 0;n<size;n++){
-                if(mapArr[i*size+n]){
-                    for(int x = -1;i<2;i++){
-                        for(int y = -1;n<2;n++){
-                            if(!mapArr[(i+x)*size+n+y]){
-                                temp[counter] = i+x;
-                                counter++;
-                                temp[counter] = n+y;
-                                counter++;
-                            }
-                        }
-                    }
+                if(checkValidity(i,n)){
+                    temp[counter] = i;
+                    counter++;
+                    temp[counter] = n;
+                    counter++;
                 }
             }
         }
