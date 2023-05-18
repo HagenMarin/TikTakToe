@@ -79,7 +79,7 @@ public:
 
     int checkWin(int index1,int index2,int val){
         int count = 0;
-        for (int i = -4;i<5;i++){
+        for (int i = max(-4,-index2);i<min(5,size-index2);i++){
             if(mapArr[index1*size+index2+i]!=val){
                 count=0;
             }else{
@@ -91,7 +91,7 @@ public:
 
         }
         count = 0;
-        for (int i = -4;i<5;i++){
+        for (int i = max(-4,-index1);i<min(5,size-index1);i++){
             if(mapArr[(index1+i)*size+index2]!=val){
                 count=0;
             }else{
@@ -102,7 +102,7 @@ public:
             }
         }
         count = 0;
-        for (int i = -4;i<5;i++){
+        for (int i = max(-index2,max(-4,-index1));i<min(min(5,size-index1),size-index2);i++){
             if(mapArr[(index1+i)*size+index2+i]!=val){
                 count=0;
             }else{
@@ -114,7 +114,7 @@ public:
 
         }
         count = 0;
-        for (int i = -4;i<5;i++){
+        for (int i = max(max(-4,-index1),-(size-index2));i<min(min(5,size-index1),index2);i++){
             if(mapArr[(index1+i)*size+index2-i]!=val){
                 count=0;
             }else{
