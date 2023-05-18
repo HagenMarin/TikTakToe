@@ -115,20 +115,29 @@ public:
     
     void printMap()
     {
-
+        string line = "";
+        int emptyLine = 1;
         for (int i = 0; i < size; i++)
         {
+            emptyLine = 1;
+            line = "|";
             for (int n = 0; n < size; n++)
             {
                 if(!mapArr[i * size + n]){
-                    cout << "  ";
+                    line += "  ";
                 }else{
-                    cout << symbols[max(0,mapArr[i * size + n])] << " ";
+                    line+= symbols[max(0,mapArr[i * size + n])];
+                    line+= " ";
+                    emptyLine = 0;
                 }
                 
             }
-            cout << endl;
+            line += "|";
+            if(!emptyLine){
+                cout << line << endl;
+            }
         }
+        
     }
     
 
