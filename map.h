@@ -151,7 +151,7 @@ public:
         }
         sizeAndArrPointer a;
         a.arr = temp;
-        a.size = sizeOfArr;
+        a.size = sizeOfArr*2;
         return a;
     }
     
