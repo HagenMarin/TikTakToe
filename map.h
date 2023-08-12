@@ -3,13 +3,11 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
-struct sizeAndArrPointer{
-    int size;
-    int *arr;
-};
+
 
 class map
 {
@@ -80,6 +78,7 @@ public:
     int checkWin(int index1,int index2,int val){
         int count = 0;
         for (int i = max(-4,-index2);i<min(5,size-index2);i++){
+            if(i==0){count++; continue;}
             if(mapArr[index1*size+index2+i]!=val){
                 count=0;
             }else{
@@ -92,6 +91,7 @@ public:
         }
         count = 0;
         for (int i = max(-4,-index1);i<min(5,size-index1);i++){
+            if(i==0){count++; continue;}
             if(mapArr[(index1+i)*size+index2]!=val){
                 count=0;
             }else{
@@ -103,6 +103,7 @@ public:
         }
         count = 0;
         for (int i = max(-index2,max(-4,-index1));i<min(min(5,size-index1),size-index2);i++){
+            if(i==0){count++; continue;}
             if(mapArr[(index1+i)*size+index2+i]!=val){
                 count=0;
             }else{
@@ -115,6 +116,7 @@ public:
         }
         count = 0;
         for (int i = max(max(-4,-index1),-(size-index2));i<min(min(5,size-index1),index2);i++){
+            if(i==0){count++; continue;}
             if(mapArr[(index1+i)*size+index2-i]!=val){
                 count=0;
             }else{
@@ -128,33 +130,16 @@ public:
         return 0;
     }
 
-    sizeAndArrPointer getValidPos() {
-        int sizeOfArr = 0;
+    vector<int> getValidPos() {
+        vector<int> a;
         for (int i = 0;i<size;i++){
             for(int n = 0;n<size;n++){
                 if(checkValidity(i,n)){
-                    sizeOfArr++;
-                            
-                        
-                    
+                    a.push_back(i);
+                    a.push_back(n);
                 }
             }
         }
-        int* temp = new int[sizeOfArr*2];
-        int counter = 0;
-        for (int i = 0;i<size;i++){
-            for(int n = 0;n<size;n++){
-                if(checkValidity(i,n)){
-                    temp[counter] = i;
-                    counter++;
-                    temp[counter] = n;
-                    counter++;
-                }
-            }
-        }
-        sizeAndArrPointer a;
-        a.arr = temp;
-        a.size = sizeOfArr*2;
         return a;
     }
     
@@ -208,7 +193,9 @@ public:
         for(int i = 0;i<size*size;i++){
             mapArr[i] = 0;
         }
+        currentPlayer = -1;
         mapArr[(int)(size/2)*size+(int)(size/2)]=currentPlayer*-1;
+        // cout << "Starting Player is:" << currentPlayer << endl;
         return *this;
     }
 };

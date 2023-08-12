@@ -3,79 +3,105 @@
 #include <iostream>
 #include "map.h"
 #include <random>
+#include <cstdlib>
+
 
 using namespace std;
 
-sizeAndArrPointer useStrat(map a)
+vector<int> useStrat(map a)
 {
-  sizeAndArrPointer validPos = a.getValidPos();
-  for (int i = 0; i < validPos.size / 2; i++)
+  vector<int> validPos = a.getValidPos();
+  vector<int> strat_moves;
+  for (int i = 0; i < validPos.size() / 2; i++)
   {
-    if (a.checkWin(validPos.arr[i * 2], validPos.arr[i * 2 + 1], a.getCurrentPlayer()))
+    //cout << "3" << endl;
+    if (a.checkWin(validPos[i * 2], validPos[i * 2 + 1], a.getCurrentPlayer()))
     {
-      int x = validPos.arr[i * 2];
-      int y = validPos.arr[i * 2 + 1];
-      validPos.arr = new int[2];
-      validPos.size = 2;
-      validPos.arr[0] = x;
-      validPos.arr[1] = y;
+      int x = validPos[i * 2];
+      int y = validPos[i * 2 + 1];
+      strat_moves.push_back(x);
+      strat_moves.push_back(y);
+      return strat_moves;
     }
   }
-  return validPos;
+  for (int i = 0; i < validPos.size() / 2; i++)
+  {
+    //cout << "Checking:" << a.getCurrentPlayer() * -1 << endl;
+    
+    if (a.checkWin(validPos[i * 2], validPos[i * 2 + 1], a.getCurrentPlayer() * -1)){
+      //cout << a.checkWin(validPos.arr[i * 2], validPos.arr[i * 2 + 1], a.getCurrentPlayer() * -1) << endl;
+      int x = validPos[i * 2];
+      int y = validPos[i * 2 + 1];
+      //cout << "found defending move at:" << x << "," << y << ", Player:" << a.getCurrentPlayer() * -1 << endl;
+      strat_moves.push_back(x);
+      strat_moves.push_back(y);
+      return strat_moves;
+    }
+  }
+  for (int i = 0; i <validPos.size()/2;i++){
+    int x = validPos[i * 2];
+    int y = validPos[i * 2 + 1];
+    strat_moves.push_back(x);
+    strat_moves.push_back(y);
+  }
+  return strat_moves;
 }
 
 int main()
 {
   map *a = new map(30, -1);
-  sizeAndArrPointer validPos = a->getValidPos();
-  random_device rd;                                                                                        // Only used once to initialise (seed) engine
-  mt19937 rng(rd());                                                                                       // Random-number engine used (Mersenne-Twister in this case)
-  uniform_int_distribution<int> *uni = new uniform_int_distribution<int>(0, (int)(validPos.size / 2) - 1); // Guaranteed unbiased
+  vector<int> validPos = a->getValidPos();
+  
 
-  auto random_integer = uni->operator()(rng);
+  auto random_integer = (int)(static_cast<double>(std::rand() * ((validPos.size() / 2) - 1)) / RAND_MAX); 
 
   // a->set(15,15,-1);
   int winRatio = 0;
-  for (int i = 0; i < 100000; i++)
+  for (int i = 0; i < 10; i++)
   {
     int won = 0;
     int val = 0;
+    int x;
+    int y;
     while (!won)
     {
+      //cout << a->getCurrentPlayer() << endl;
+      val = a->getCurrentPlayer();
       validPos = useStrat(*a);
-      if (validPos.size == 2)
+      if (validPos.size() == 2)
       {
-        a->set(validPos.arr[0], validPos.arr[1], a->getCurrentPlayer());
+        a->set(validPos[0], validPos[1], a->getCurrentPlayer());
+        x = validPos[0];
+        y = validPos[1];
       }
       else
       {
-        uni = new uniform_int_distribution<int>(0, (int)(validPos.size / 2) - 1); // Guaranteed unbiased
-        val = a->getCurrentPlayer();
-        random_integer = uni->operator()(rng);
-        a->set(validPos.arr[random_integer * 2], validPos.arr[random_integer * 2 + 1], val);
+        
+        random_integer = (int)(static_cast<double>(std::rand() * ((validPos.size() / 2) - 1)) / RAND_MAX); 
+        a->set(validPos[random_integer * 2], validPos[random_integer * 2 + 1], val);
+        x = validPos[random_integer * 2];
+        y = validPos[random_integer * 2 + 1];
       }
-
-      if (a->checkWin(validPos.arr[random_integer * 2], validPos.arr[random_integer * 2 + 1], val))
+      if (a->checkWin(x, y, val))
       {
         won = 1;
-        // cout << "Winner is:" << val << endl;
+        //cout << "Winner is:" << val << endl;
         continue;
       }
       validPos = a->getValidPos();
-      uni = new uniform_int_distribution<int>(0, (int)(validPos.size / 2) - 1); // Guaranteed unbiased
       val = a->getCurrentPlayer();
-      random_integer = uni->operator()(rng);
-      a->set(validPos.arr[random_integer * 2], validPos.arr[random_integer * 2 + 1], val);
-      if (a->checkWin(validPos.arr[random_integer * 2], validPos.arr[random_integer * 2 + 1], val))
+      random_integer = (int)(static_cast<double>(std::rand() * ((validPos.size() / 2) - 1)) / RAND_MAX); 
+      a->set(validPos[random_integer * 2], validPos[random_integer * 2 + 1], val);
+      if (a->checkWin(validPos[random_integer * 2], validPos[random_integer * 2 + 1], val))
       {
         won = 1;
         // cout << "Winner is:" << val << endl;
         continue;
       }
     }
-    //cout << "Winner is:" << val << endl;
+    cout << "Winner is:" << val << endl;
     winRatio += val;
-    // a->printMap();
+    a->printMap();
     a->clear();
   }
   cout << "The win ratio is:" << winRatio << endl;
