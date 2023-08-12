@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <fstream>
 #include <vector>
 
 using namespace std;
@@ -168,6 +169,14 @@ public:
             }
         }
         
+    }
+
+    void writeMap(ofstream *out){
+        *out << mapArr[0];
+        for(int i =1;i<size*size;i++){
+            *out << "," << mapArr[i];
+        }
+        *out << "\n";
     }
     
 

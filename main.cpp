@@ -51,13 +51,14 @@ int main()
 {
   map *a = new map(30, -1);
   vector<int> validPos = a->getValidPos();
-  
+  ofstream *out_x = new ofstream("out_x.csv");
+  ofstream *out_labels = new ofstream("out_labels.csv");
 
   auto random_integer = (int)(static_cast<double>(std::rand() * ((validPos.size() / 2) - 1)) / RAND_MAX); 
 
   // a->set(15,15,-1);
   int winRatio = 0;
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 200000; i++)
   {
     int won = 0;
     int val = 0;
@@ -68,6 +69,7 @@ int main()
       //cout << a->getCurrentPlayer() << endl;
       val = a->getCurrentPlayer();
       validPos = useStrat(*a);
+      a->writeMap(out_x);
       if (validPos.size() == 2)
       {
         a->set(validPos[0], validPos[1], a->getCurrentPlayer());
@@ -82,6 +84,7 @@ int main()
         x = validPos[random_integer * 2];
         y = validPos[random_integer * 2 + 1];
       }
+      a->writeMap(out_labels);
       if (a->checkWin(x, y, val))
       {
         won = 1;
@@ -104,6 +107,8 @@ int main()
     a->printMap();
     a->clear();
   }
+  out_x->close();
+  out_labels->close();
   cout << "The win ratio is:" << winRatio << endl;
   return 0;
 }
